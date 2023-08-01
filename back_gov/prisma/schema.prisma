@@ -1,0 +1,582 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["aplicacao", "common", "enderecamento", "institucional", "public"]
+}
+
+model beneficiario_log {
+  id              Int          @id @default(autoincrement())
+  log_date        DateTime     @db.Timestamp(6)
+  tipo_evento_log String       @db.VarChar(255)
+  beneficiario_id BigInt
+  usuario_acao_id String       @db.VarChar(20)
+  beneficiario    beneficiario @relation(fields: [beneficiario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_acao_id")
+
+  @@schema("aplicacao")
+}
+
+model flyway_schema_history {
+  installed_rank Int      @id(map: "flyway_schema_history_pk")
+  version        String?  @db.VarChar(50)
+  description    String   @db.VarChar(200)
+  type           String   @db.VarChar(20)
+  script         String   @db.VarChar(1000)
+  checksum       Int?
+  installed_by   String   @db.VarChar(100)
+  installed_on   DateTime @default(now()) @db.Timestamp(6)
+  execution_time Int
+  success        Boolean
+
+  @@index([success], map: "flyway_schema_history_s_idx")
+  @@schema("aplicacao")
+}
+
+model informativo {
+  id            Int      @id @default(autoincrement())
+  data_inclusao DateTime @db.Timestamp(6)
+  beneficiario  String?  @db.VarChar(255)
+  contato       String?  @db.VarChar(20)
+  situacao      Boolean?
+  mensagem_id   Int?
+
+  @@schema("aplicacao")
+}
+
+model user_log {
+  id                Int      @id @default(autoincrement())
+  log_date          DateTime @db.Timestamp(6)
+  login             String?  @db.VarChar(255)
+  message           String?
+  tipo_acao_usuario String   @db.VarChar(255)
+
+  @@schema("aplicacao")
+}
+
+model contato {
+  id           BigInt @id @default(autoincrement())
+  contato      String @db.VarChar(255)
+  tipo_contato String @db.VarChar(255)
+  pessoa_id    BigInt
+  pessoa       pessoa @relation(fields: [pessoa_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_id")
+
+  @@schema("common")
+}
+
+model deficiencia {
+  id                        BigInt                      @id @default(autoincrement())
+  nome                      String                      @db.VarChar(255)
+  pessoa_fisica_deficiencia pessoa_fisica_deficiencia[]
+
+  @@schema("common")
+}
+
+model documento {
+  id             BigInt    @id @default(autoincrement())
+  data_emissao   DateTime? @db.Date
+  numero         String?   @db.VarChar(255)
+  orgao_emissor  String?   @db.VarChar(255)
+  tipo_documento String    @db.VarChar(255)
+  pessoa_id      BigInt?
+  pessoa         pessoa?   @relation(fields: [pessoa_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_id")
+
+  @@schema("common")
+}
+
+model etnia_indigena {
+  id                BigInt          @id @default(autoincrement())
+  data_hora_remocao DateTime?       @db.Timestamp(6)
+  nome              String          @db.VarChar(255)
+  pessoa_fisica     pessoa_fisica[]
+
+  @@schema("common")
+}
+
+model pessoa {
+  id                         BigInt           @id @default(autoincrement())
+  data_hora_criacao          DateTime         @default(now()) @db.Timestamp(6)
+  data_hora_remocao          DateTime?        @db.Timestamp(6)
+  nome                       String           @db.VarChar(255)
+  codigo                     String?          @db.VarChar(14)
+  referencia                 String           @unique @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  endereco_atual_cep         String?          @db.VarChar(8)
+  endereco_atual_uf          String?          @db.VarChar(2)
+  endereco_atual_cidade      String?          @db.VarChar(100)
+  endereco_atual_bairro      String?          @db.VarChar(255)
+  endereco_atual_logradouro  String?          @db.VarChar(255)
+  endereco_atual_numero      String?          @db.VarChar(20)
+  endereco_atual_complemento String?          @db.VarChar(255)
+  endereco_atual_referencia  String?          @db.VarChar(255)
+  contato                    contato[]
+  documento                  documento[]
+  pessoa_anexos              pessoa_anexos[]  @ignore
+  pessoa_fisica              pessoa_fisica?
+  pessoa_juridica            pessoa_juridica?
+
+  @@schema("common")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model pessoa_anexos {
+  anexo_id      BigInt
+  aqcontent     Bytes
+  aqname        String  @db.VarChar(300)
+  aqsize        BigInt?
+  aqcontenttype String  @db.VarChar(32)
+  pessoa        pessoa  @relation(fields: [anexo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_anexo_id")
+
+  @@ignore
+  @@schema("common")
+}
+
+model pessoa_fisica {
+  cor_raca                                                   String?                     @db.VarChar(255)
+  data_nascimento                                            DateTime                    @db.Date
+  escolaridade                                               String?                     @db.VarChar(255)
+  estado_civil                                               String?                     @db.VarChar(255)
+  naturalidade                                               String?                     @db.VarChar(100)
+  filiacao_mae                                               String?                     @db.VarChar(255)
+  filiacao_pai                                               String?                     @db.VarChar(255)
+  nome_social                                                String?                     @db.VarChar(255)
+  sexo                                                       String                      @db.VarChar(255)
+  pessoa_id                                                  BigInt                      @id
+  etnia_indigena_id                                          BigInt?
+  nacionalidade_id                                           BigInt?
+  codigo_identificacao                                       String?                     @db.VarChar(255)
+  etnia_indigena                                             etnia_indigena?             @relation(fields: [etnia_indigena_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_etnia_indigena_id")
+  pais                                                       pais?                       @relation(fields: [nacionalidade_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_nacionalidade_id")
+  pessoa                                                     pessoa                      @relation(fields: [pessoa_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_id")
+  pessoa_fisica_deficiencia                                  pessoa_fisica_deficiencia[]
+  beneficiario                                               beneficiario[]
+  familiar_familiar_pessoa_fisica_familiar_idTopessoa_fisica familiar[]                  @relation("familiar_pessoa_fisica_familiar_idTopessoa_fisica")
+  familiar_familiar_pessoa_fisica_idTopessoa_fisica          familiar[]                  @relation("familiar_pessoa_fisica_idTopessoa_fisica")
+  moradia                                                    moradia[]
+  pagamento                                                  pagamento[]
+  perfil_economico                                           perfil_economico[]
+
+  @@schema("common")
+}
+
+model pessoa_fisica_deficiencia {
+  pessoa_fisica_id BigInt
+  deficiencia_id   BigInt
+  deficiencia      deficiencia   @relation(fields: [deficiencia_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_deficiencia_id")
+  pessoa_fisica    pessoa_fisica @relation(fields: [pessoa_fisica_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_fisica_id")
+
+  @@id([pessoa_fisica_id, deficiencia_id])
+  @@schema("common")
+}
+
+model pessoa_juridica {
+  inscricao_estadual  String? @db.VarChar(255)
+  inscricao_municipal String? @db.VarChar(255)
+  razao_social        String? @db.VarChar(255)
+  pessoa_id           BigInt  @id
+  pessoa              pessoa  @relation(fields: [pessoa_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_id")
+
+  @@schema("common")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model usuario_anexos {
+  anexo_id      String  @db.VarChar
+  aqcontent     Bytes
+  aqname        String  @db.VarChar(300)
+  aqsize        BigInt?
+  aqcontenttype String  @db.VarChar(32)
+  usuario       usuario @relation(fields: [anexo_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_anexo_id")
+
+  @@ignore
+  @@schema("common")
+}
+
+model log_bairro {
+  bai_nu             Int                  @id
+  latitude           String?              @db.VarChar(15)
+  longitude          String?              @db.VarChar(15)
+  bai_no             String               @db.VarChar(72)
+  bai_no_abrev       String?              @db.VarChar(51)
+  loc_nu             Int
+  ufe_sg             String               @db.VarChar(2)
+  log_faixa_uf       log_faixa_uf         @relation(fields: [ufe_sg], references: [ufe_sg], onDelete: NoAction, onUpdate: NoAction, map: "fk_bairro_estado")
+  log_localidade     log_localidade       @relation(fields: [loc_nu], references: [loc_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk_localidade_id")
+  log_grande_usuario log_grande_usuario[]
+  log_logradouro     log_logradouro[]
+
+  @@schema("enderecamento")
+}
+
+model log_faixa_uf {
+  ufe_sg             String               @id @db.VarChar(2)
+  ufe_cep_fim        String?              @db.VarChar(8)
+  ufe_cep_ini        String?              @db.VarChar(8)
+  ufe_no             String?              @db.VarChar(72)
+  log_bairro         log_bairro[]
+  log_grande_usuario log_grande_usuario[]
+  log_localidade     log_localidade[]
+  log_logradouro     log_logradouro[]
+
+  @@schema("enderecamento")
+}
+
+model log_grande_usuario {
+  gru_nu         Int             @id
+  cep            String?         @db.VarChar(8)
+  latitude       Int?
+  longitude      Int?
+  gru_endereco   String          @db.VarChar(100)
+  gru_no         String          @db.VarChar(72)
+  gru_no_abrev   String?         @db.VarChar(36)
+  bai_nu         Int
+  loc_nu         Int
+  log_nu         Int?
+  ufe_sg         String          @db.VarChar(2)
+  log_localidade log_localidade  @relation(fields: [loc_nu], references: [loc_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk2rivwt9wvbsths3m1uklm1lcw")
+  log_bairro     log_bairro      @relation(fields: [bai_nu], references: [bai_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk8d74b3qgywkaa0mgj5or0upek")
+  log_faixa_uf   log_faixa_uf    @relation(fields: [ufe_sg], references: [ufe_sg], onDelete: NoAction, onUpdate: NoAction, map: "fk_grande_usuario_estado")
+  log_logradouro log_logradouro? @relation(fields: [log_nu], references: [log_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk_logradouro_id")
+
+  @@schema("enderecamento")
+}
+
+model log_localidade {
+  loc_nu               Int                  @id
+  capital              Boolean              @default(false)
+  cep                  String?              @db.VarChar(8)
+  mun_nu               String?              @db.VarChar(7)
+  latitude             String?              @db.VarChar(15)
+  longitude            String?              @db.VarChar(15)
+  loc_no               String               @db.VarChar(72)
+  loc_no_abrev         String?              @db.VarChar(36)
+  loc_in_sit           String               @db.VarChar(1)
+  loc_in_tipo_loc      String?              @db.VarChar(1)
+  loc_nu_sub           Int?
+  ufe_sg               String               @db.VarChar(2)
+  log_bairro           log_bairro[]
+  log_grande_usuario   log_grande_usuario[]
+  log_faixa_uf         log_faixa_uf         @relation(fields: [ufe_sg], references: [ufe_sg], onDelete: NoAction, onUpdate: NoAction, map: "fk_localidade_estado")
+  log_localidade       log_localidade?      @relation("log_localidadeTolog_localidade", fields: [loc_nu_sub], references: [loc_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk_localidade_localidade")
+  other_log_localidade log_localidade[]     @relation("log_localidadeTolog_localidade")
+  log_logradouro       log_logradouro[]
+
+  @@schema("enderecamento")
+}
+
+model log_logradouro {
+  log_nu             Int                  @id
+  cep                String?              @db.VarChar(8)
+  log_complemento    String?              @db.VarChar(100)
+  latitude           String?              @db.VarChar(15)
+  longitude          String?              @db.VarChar(15)
+  bai_nu_fim         Int?
+  log_no             String               @db.VarChar(100)
+  log_no_abrev       String?              @db.VarChar(100)
+  tlo_tx             String               @db.VarChar(36)
+  log_sta_tlo        String?              @db.VarChar(1)
+  bai_nu_ini         Int
+  loc_nu             Int
+  ufe_sg             String               @db.VarChar(2)
+  log_grande_usuario log_grande_usuario[]
+  log_bairro         log_bairro           @relation(fields: [bai_nu_ini], references: [bai_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk_bairro_id")
+  log_localidade     log_localidade       @relation(fields: [loc_nu], references: [loc_nu], onDelete: NoAction, onUpdate: NoAction, map: "fk_localidade_id")
+  log_faixa_uf       log_faixa_uf         @relation(fields: [ufe_sg], references: [ufe_sg], onDelete: NoAction, onUpdate: NoAction, map: "fk_logradouro_estado")
+
+  @@schema("enderecamento")
+}
+
+model pais {
+  id            BigInt          @id
+  isobinario    String?         @db.VarChar(2)
+  isoternario   String?         @db.VarChar(3)
+  nome          String?         @db.VarChar(255)
+  pessoa_fisica pessoa_fisica[]
+
+  @@schema("enderecamento")
+}
+
+model beneficiario {
+  id                                                BigInt             @id @default(autoincrement())
+  codigo_beneficio                                  String             @db.VarChar(255)
+  data_hora_analise                                 DateTime?          @db.Timestamp(6)
+  data_hora_criacao                                 DateTime           @default(now()) @db.Timestamp(6)
+  data_hora_liberacao                               DateTime?          @db.Timestamp(6)
+  data_hora_negacao                                 DateTime?          @db.Timestamp(6)
+  data_hora_bloqueio                                DateTime?          @db.Timestamp(6)
+  entidade_parceira_id                              BigInt?
+  pessoa_beneficiaria_id                            BigInt
+  programa_social_id                                BigInt
+  usuario_cadastro_id                               String             @db.VarChar(20)
+  modalidade                                        String?            @db.VarChar(255)
+  usuario_analista_id                               String?            @db.VarChar(20)
+  beneficiario_log                                  beneficiario_log[]
+  entidade_parceira                                 entidade_parceira? @relation(fields: [entidade_parceira_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_entidade_parceira_id")
+  pessoa_fisica                                     pessoa_fisica      @relation(fields: [pessoa_beneficiaria_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_beneficiaria_id")
+  programa_social                                   programa_social    @relation(fields: [programa_social_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_programa_social_id")
+  usuario_beneficiario_usuario_analista_idTousuario usuario?           @relation("beneficiario_usuario_analista_idTousuario", fields: [usuario_analista_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_analista_id")
+  usuario_beneficiario_usuario_cadastro_idTousuario usuario            @relation("beneficiario_usuario_cadastro_idTousuario", fields: [usuario_cadastro_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_cadastro_id")
+  beneficio                                         beneficio[]
+  parecer                                           parecer[]
+
+  @@schema("institucional")
+}
+
+model beneficio {
+  numero           String             @id @db.VarChar(255)
+  beneficiario_id  BigInt?
+  beneficiario     beneficiario?      @relation(fields: [beneficiario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk73kmbpxc6fsib868j90dil9ob")
+  cartao           cartao?
+  evento_beneficio evento_beneficio[]
+
+  @@schema("institucional")
+}
+
+model cartao {
+  databloqueio DateTime? @db.Timestamp(6)
+  datavalidade DateTime? @db.Timestamp(6)
+  saldo        Float?
+  numero       String    @id @db.VarChar(255)
+  beneficio    beneficio @relation(fields: [numero], references: [numero], onDelete: NoAction, onUpdate: NoAction, map: "fk4qfwytyylo0ke0xvvmpegq8k6")
+
+  @@schema("institucional")
+}
+
+model codigo_identificacao {
+  id                Int       @id @default(autoincrement())
+  nome              String?   @db.VarChar(255)
+  codigo            String?   @unique(map: "uk_codigo") @db.VarChar(255)
+  data_hora_remocao DateTime? @db.Timestamp(6)
+  data_hora_criacao DateTime? @db.Timestamp(6)
+
+  @@schema("institucional")
+}
+
+model entidade_parceira {
+  id                  BigInt         @id @default(autoincrement())
+  data_hora_criacao   DateTime?      @db.Timestamp(6)
+  data_hora_remocao   DateTime?      @db.Timestamp(6)
+  nome                String         @db.VarChar(255)
+  usuario_cadastro_id String         @db.VarChar(20)
+  beneficiario        beneficiario[]
+  usuario             usuario        @relation(fields: [usuario_cadastro_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_cadastro_id")
+
+  @@schema("institucional")
+}
+
+model evento_beneficio {
+  id           BigInt    @id @default(autoincrement())
+  dataevento   DateTime? @db.Timestamp(6)
+  natureza     String    @db.VarChar(255)
+  beneficio_id String    @db.VarChar(255)
+  beneficio    beneficio @relation(fields: [beneficio_id], references: [numero], onDelete: NoAction, onUpdate: NoAction, map: "fk_beneficio_id")
+
+  @@schema("institucional")
+}
+
+model familiar {
+  id                                                              BigInt        @id @default(autoincrement())
+  fator_risco_social                                              String?       @db.VarChar(255)
+  ocupacao                                                        String?       @db.VarChar(100)
+  vinculo                                                         String?       @db.VarChar(100)
+  pessoa_fisica_id                                                BigInt
+  pessoa_fisica_familiar_id                                       BigInt
+  data_hora_remocao                                               DateTime?     @db.Timestamp(6)
+  pessoa_fisica_familiar_pessoa_fisica_familiar_idTopessoa_fisica pessoa_fisica @relation("familiar_pessoa_fisica_familiar_idTopessoa_fisica", fields: [pessoa_fisica_familiar_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_fisica_familiar_id")
+  pessoa_fisica_familiar_pessoa_fisica_idTopessoa_fisica          pessoa_fisica @relation("familiar_pessoa_fisica_idTopessoa_fisica", fields: [pessoa_fisica_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_fisica_id")
+
+  @@schema("institucional")
+}
+
+model moradia {
+  id                              BigInt        @id @default(autoincrement())
+  coleta_lixo                     Boolean
+  data_hora_criacao               DateTime?     @db.Timestamp(6)
+  data_hora_remocao               DateTime?     @db.Timestamp(6)
+  direcionamento_esgoto_sanitario String?       @db.VarChar(255)
+  energia_eletrica                Boolean
+  esgoto_sanitario                Boolean
+  quantidade_comodo               Int?
+  quantidade_familia_domicilio    Int?
+  rural                           Boolean
+  situacao_moradia                String?       @db.VarChar(255)
+  tipo_abastecimento_agua         String?       @db.VarChar(255)
+  tipo_construcao                 String?       @db.VarChar(255)
+  tipo_moradia                    String?       @db.VarChar(255)
+  tratamento_agua                 Boolean
+  valor_aluguel                   Float?
+  valor_imovel                    Float?
+  pessoa_fisica_id                BigInt
+  usuario_cadastro_id             String        @db.VarChar(20)
+  pessoa_fisica                   pessoa_fisica @relation(fields: [pessoa_fisica_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_fisica_id")
+  usuario                         usuario       @relation(fields: [usuario_cadastro_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_cadastro_id")
+
+  @@schema("institucional")
+}
+
+model numeracao_documento {
+  ndtipo       Int @id
+  ndano        Int
+  ndnumero     Int
+  ndsequencial Int
+
+  @@schema("institucional")
+}
+
+model pagamento {
+  id                 Int            @id(map: "pk_pagamento_id") @default(autoincrement())
+  data_processamento DateTime?      @db.Timestamp(6)
+  data_pagamento     DateTime       @db.Date
+  saldo              Decimal?       @db.Decimal(5, 2)
+  pessoa_fisica_id   BigInt?
+  pessoa_fisica      pessoa_fisica? @relation(fields: [pessoa_fisica_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pagamento_pessoa_fisica_id")
+
+  @@schema("institucional")
+}
+
+model parecer {
+  id                  BigInt       @id @default(autoincrement())
+  beneficiario_id     BigInt
+  data_hora_criacao   DateTime     @default(now()) @db.Timestamp(6)
+  data_hora_remocao   DateTime?    @db.Timestamp(6)
+  descricao           String
+  usuario_cadastro_id String       @db.VarChar(20)
+  tipo_parecer        String       @db.VarChar(100)
+  beneficiario        beneficiario @relation(fields: [beneficiario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_beneficiario_id")
+  usuario             usuario      @relation(fields: [usuario_cadastro_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_cadastro_id")
+
+  @@schema("institucional")
+}
+
+model perfil_economico {
+  id                            Int              @id @default(autoincrement())
+  data_hora_criacao             DateTime?        @db.Timestamp(6)
+  data_hora_remocao             DateTime?        @db.Timestamp(6)
+  natureza_vinculo_empregaticio String?          @db.VarChar(255)
+  renda_familiar                Float?
+  vinculo_empregaticio          Boolean
+  pessoa_fisica_id              BigInt
+  usuario_cadastro_id           String           @db.VarChar(20)
+  beneficio_social_id           BigInt?
+  tipo_profissional             String?          @db.VarChar
+  renda_anual_mei_autonomo      Float?
+  modulo_fiscal                 String?          @db.VarChar
+  tipo_profissao_autonomo       String?          @db.VarChar
+  programa_social               programa_social? @relation(fields: [beneficio_social_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_beneficio_social_id")
+  pessoa_fisica                 pessoa_fisica    @relation(fields: [pessoa_fisica_id], references: [pessoa_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pessoa_fisica_id")
+  usuario                       usuario          @relation(fields: [usuario_cadastro_id], references: [login], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuario_cadastro_id")
+
+  @@schema("institucional")
+}
+
+model programa_social {
+  id                BigInt             @id @default(autoincrement())
+  data_hora_criacao DateTime?          @db.Timestamp(6)
+  data_hora_remocao DateTime?          @db.Timestamp(6)
+  identificador     String             @db.VarChar(255)
+  nome              String             @db.VarChar(255)
+  natureza          String?            @db.VarChar(20)
+  beneficiario      beneficiario[]
+  perfil_economico  perfil_economico[]
+
+  @@schema("institucional")
+}
+
+model salario_minimo {
+  id                Int       @id @default(autoincrement())
+  data_hora_criacao DateTime? @db.Timestamp(6)
+  data_hora_remocao DateTime? @db.Timestamp(6)
+  valor             Float?
+
+  @@schema("institucional")
+}
+
+model acesso {
+  id            Int             @id @default(autoincrement())
+  descricao     String          @db.VarChar(40)
+  nome          String          @db.VarChar(40)
+  perfil_acesso perfil_acesso[] @ignore
+
+  @@schema("public")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model benef_card {
+  nome_cartao String?
+  cpf_benef   String?
+
+  @@ignore
+  @@schema("public")
+}
+
+model beneficiario_consulta {
+  id            Int       @id(map: "informativo_pkey") @default(autoincrement())
+  data_inclusao DateTime  @db.Timestamp(6)
+  beneficiario  String?   @db.VarChar(255)
+  cpf           String?   @db.VarChar(20)
+  contato       String?   @db.VarChar(20)
+  mensagem_id   Int?
+  mensagem      mensagem? @relation(fields: [mensagem_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_mensagem_id")
+
+  @@schema("public")
+}
+
+model mensagem {
+  id                    Int                     @id @default(autoincrement())
+  data_inclusao         DateTime?               @db.Timestamp(6)
+  user_login            String?                 @db.VarChar(20)
+  ip_address            String?                 @db.VarChar(20)
+  texto                 String?
+  data_entrega          DateTime?               @db.Date
+  hora_entrega          DateTime?               @db.Time(6)
+  localidade            String?                 @db.VarChar(255)
+  beneficiario_consulta beneficiario_consulta[]
+
+  @@schema("public")
+}
+
+model perfil {
+  id                Int             @id @default(autoincrement())
+  data_hora_criacao DateTime        @db.Timestamp(6)
+  data_hora_remocao DateTime?       @db.Timestamp(6)
+  nome              String          @db.VarChar(255)
+  padrao            Boolean
+  tipo_perfil       String?         @db.VarChar(255)
+  perfil_acesso     perfil_acesso[] @ignore
+  usuario           usuario[]
+
+  @@schema("public")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model perfil_acesso {
+  perfil_id Int
+  acesso_id Int
+  acesso    acesso @relation(fields: [acesso_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_acesso_id")
+  perfil    perfil @relation(fields: [perfil_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_perfil_id")
+
+  @@ignore
+  @@schema("public")
+}
+
+model usuario {
+  login                                                  String              @id @db.VarChar(20)
+  data_hora_criacao                                      DateTime            @db.Timestamp(6)
+  data_hora_remocao                                      DateTime?           @db.Timestamp(6)
+  dt_ultimo_login                                        DateTime?           @db.Timestamp(6)
+  nome                                                   String              @db.VarChar(255)
+  senha                                                  String              @db.VarChar(255)
+  perfil_id                                              Int?
+  usuario_anexos                                         usuario_anexos[]    @ignore
+  beneficiario_beneficiario_usuario_analista_idTousuario beneficiario[]      @relation("beneficiario_usuario_analista_idTousuario")
+  beneficiario_beneficiario_usuario_cadastro_idTousuario beneficiario[]      @relation("beneficiario_usuario_cadastro_idTousuario")
+  entidade_parceira                                      entidade_parceira[]
+  moradia                                                moradia[]
+  parecer                                                parecer[]
+  perfil_economico                                       perfil_economico[]
+  perfil                                                 perfil?             @relation(fields: [perfil_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_perfil_id")
+
+  @@schema("public")
+}
