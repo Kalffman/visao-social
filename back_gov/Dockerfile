@@ -2,19 +2,15 @@ FROM node:lts
 
 WORKDIR /usr/src/app
 
-RUN npm i -g yarn
-
-COPY package.json ./
+COPY . .
 
 RUN yarn install
 
-COPY . .
-
 EXPOSE 3333
 
-ENV DATABASE_URL ''
+ENV DATABASE_URL 'postgres://postgres:vef3Aez0aiY8xah@10.177.150.151:5432/PRODUCAO_cestafamilia'
 ENV PORT 3333
-ENV SECRET_KEY ''
+ENV SECRET_KEY 'sdakljfngasdkgjndalkfjgndfg'
 
 CMD [ "yarn", "dev" ]
 
