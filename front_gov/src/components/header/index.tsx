@@ -11,7 +11,7 @@ export default function Header() {
 
   return (
     <header className="flex w-full items-center justify-between px-6 bg-[#FDFDFD] h-16 text-zinc-500">
-      <img src="./src/assets/icons/brasaoLogoDark.png" alt="logo" />
+      <img src="./assets/icons/brasaoLogoDark.png" alt="logo" />
       <button
         className="xl:hidden"
         onClick={() => setIsSideBarOpen(!isSideBarOpen)}
@@ -75,7 +75,7 @@ export default function Header() {
                 }}
               >
                 <div className="p-1" role="none">
-                  <ul className="">
+                  <ul onMouseLeave={() => setIsHiddenDropDownUser(!isHiddenDropDownUser) } className="">
                     <li>
                       {" "}
                       <button

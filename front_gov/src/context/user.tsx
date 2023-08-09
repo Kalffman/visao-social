@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { IPropsUserContext, IUserContextType } from "../@types/userContext";
-import { IUserResponse } from "../@types/user";
+
 
 const UserContext = createContext<IUserContextType>({} as any);
 

@@ -5,12 +5,11 @@ import SubHeader from "../../components/subHeader";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "react-toastify";
+
 import { useContextUser } from "../../context/user";
 import Loading from "../../loading";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../service/api";
-import { AxiosError } from "axios";
+
 import { useContextAuth } from "../../context/auth";
 import { useEffect } from "react";
 
@@ -19,7 +18,7 @@ const schema = z.object({
     .string()
     .min(11, { message: "digite apenas números" })
     .max(11, { message: "digite apenas os números" }),
-  password: z.string().min(6, { message: "deve ter no mínimo 6 caracteres" }),
+  password: z.string().min(5, { message: "deve ter no mínimo 5 caracteres" }),
 });
 
 function Login() {
@@ -47,7 +46,7 @@ function Login() {
         <h1>VISÃO SOCIAL RR</h1>
       </SubHeader>
       <section className="flex flex-1 gap-40 bg-secondary  justify-center items-center text-zinc-500 py-10">
-        <img src="./src/assets/icons/logoRR.png" className="max-md:hidden" />
+        <img src="./assets/icons/logoRR.png" className="max-md:hidden" />
         <form
           onSubmit={handleSubmit(login)}
           className="bg-white flex  w-full max-w-sm flex-col p-6 gap-6 drop-shadow-lg rounded-lg "

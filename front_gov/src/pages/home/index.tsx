@@ -64,34 +64,34 @@ function Home() {
       {beneficiary.cpf ? (
         <main className="flex flex-col  flex-1 items-center gap-6 xl:text-base text-xs p-6 text-black bg-secondary ">
           <Card
-            className="bg-white  p-4 w-full max-w-4xl rounded-lg drop-shadow-lg"
+            className="bg-white  p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="DADOS PESSOAIS"
           >
-            <div className="mt-6 flex justify-around">
-              <div className="flex flex-col">
+            <div className="mt-6 flex justify-around flex-wrap gap-4">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">NOME</label>
                 <span className="pl-3">{beneficiary.nome}</span>
               </div>
 
-              <div className="flex flex-col">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CPF</label>
                 <span className="pl-3">{beneficiary.cpf}</span>
               </div>
             </div>
             <hr className="mt-4" />
-            <div className="mt-6 flex justify-around">
-              <div className="flex flex-col">
+            <div className="mt-6 flex justify-around flex-wrap gap-4">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">DATA DE NASCIMENTO</label>
                 <span className="pl-3">{beneficiary.data_nascimento}</span>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">TELEFONE</label>
                 <span className="pl-3">{beneficiary.contatos}</span>
               </div>
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">RG</label>
                 <span className="pl-3">{}</span>
-              </div>
+              </div> */}
             </div>
 
             <Card
@@ -113,7 +113,7 @@ function Home() {
                     {beneficiary.extractUse &&
                       beneficiary.extractUse.map((e) => {
                         return (
-                          <tr className="border-b">
+                          <tr key={e.cod_id} className="border-b">
                             <td className="border-b p-2">
                               {new Date(e.data_criacao).toLocaleString("pt", {
                                 dateStyle: "short",
@@ -133,14 +133,14 @@ function Home() {
               {isOpenDateils ? (
                 <button
                   onClick={() => setIsOpenDetails(!isOpenDateils)}
-                  className="bg-blue-800 py-1 z-50 px-4 text-white rounded-sm"
+                  className="bg-blue-800 py-1 z-50 px-4 text-white rounded-lg"
                 >
                   VOLTAR
                 </button>
               ) : (
                 <button
                   onClick={() => setIsOpenDetails(!isOpenDateils)}
-                  className="bg-blue-800 py-1 z-50 px-4 text-white rounded-sm"
+                  className="bg-blue-800 py-1 z-50 px-4 text-white rounded-lg"
                 >
                   DETALHES
                 </button>
@@ -148,32 +148,32 @@ function Home() {
             </div>
           </Card>
           <Card
-            className="bg-white p-4 w-full max-w-4xl rounded-lg drop-shadow-lg"
+            className="bg-white p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="ENDEREÇO"
           >
-            <div className="mt-6 flex justify-around">
-              <div className="flex flex-col">
+            <div className="mt-6 flex justify-around flex-wrap gap-4">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">BAIRRO</label>
                 <span className="pl-3">{beneficiary.bairro}</span>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CIDADE</label>
                 <span className="pl-3">{beneficiary.cidade}</span>
               </div>
-              <div className="flex flex-col">
+              {/* <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CEP</label>
                 <span className="pl-3">{}</span>
-              </div>
+              </div> */}
             </div>
             <hr className="mt-4" />
-            <div className="mt-6 flex justify-around">
-              <div className="flex flex-col">
+            <div className="mt-6 flex justify-around flex-wrap gap-4">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">N° RESIDENCIAL</label>
                 <span className="pl-3">
                   {beneficiary.logradouro.split("Nº")[1]}
                 </span>
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">RUA</label>
                 <span className="pl-3">
                   {beneficiary.logradouro.split("Nº")[0]}
@@ -182,7 +182,7 @@ function Home() {
             </div>
           </Card>
           <Card
-            className="bg-white p-4 w-full max-w-4xl rounded-lg drop-shadow-lg"
+            className="bg-white p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="COMPOSIÇÃO FAMILIAR"
           >
             <div className="my-10 w-full flex justify-center">
@@ -198,8 +198,9 @@ function Home() {
                   <tbody className="table-auto text-left">
                     {beneficiary.familiar.length > 0 &&
                       beneficiary.familiar.map((parent: familiar) => {
+                        console.log(parent)
                         return (
-                          <tr className="border-b">
+                          <tr key={parent.familiar_id} className="border-b">
                             <td className="border-b p-2">
                               {parent.familiar_nome}
                             </td>

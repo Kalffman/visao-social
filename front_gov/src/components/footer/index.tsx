@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="relative top-6">
           <img
             className="absolute w-36 h-20 max-xl:hidden"
-            src="./src/assets/icons/brasaoLogo.png"
+            src="./assets/icons/brasaoLogo.png"
             alt="brasão"
           />
         </div>
