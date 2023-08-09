@@ -26,7 +26,7 @@ export function AuthProvider({ children }: IPropsAuthContext) {
         localStorage.setItem("gov_rr:token", res.data.token);
         console.log(res.data.user);
         localStorage.setItem("gov_rr:user", JSON.stringify(res.data.user));
-        toast.success(`bem vindo, ${res.data.user.nome}`);
+        toast.success(`Bem vindo, ${res.data.user.nome}`);
         setLoading(false);
         navigation("/home");
       })

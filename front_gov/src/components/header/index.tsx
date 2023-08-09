@@ -11,7 +11,13 @@ export default function Header() {
 
   return (
     <header className="flex w-full items-center justify-between px-6 bg-[#FDFDFD] h-16 text-zinc-500">
-      <img src="./assets/icons/brasaoLogoDark.png" alt="logo" />
+      <div className="relative bottom-2 left-4 ">
+          <img
+            className="h-20 max-xl:hidden pt-5 "
+            src="./assets/icons/brasao-logo-1x.png"
+            alt="brasão"
+          />
+        </div>
       <button
         className="xl:hidden"
         onClick={() => setIsSideBarOpen(!isSideBarOpen)}
@@ -37,16 +43,16 @@ export default function Header() {
             </span>
           </button>
         ) : null}
-        <a className="text-zinc-500 hover:text-zinc-200" href="#">
+        <a className="text-zinc-500 hover:text-zinc-200 " target="_blank" href="https://www.transparencia.rr.gov.br/">
           Acesso à informação
         </a>
-        <a className="text-zinc-500 hover:text-zinc-200" href="#">
+        <a className="text-zinc-500 hover:text-zinc-200" target="_blank" href="https://portal.rr.gov.br/">
           Governo
         </a>
-        <a className="text-zinc-500 hover:text-zinc-200" href="#">
+        <a className="text-zinc-500 hover:text-zinc-200" target="_blank" href="https://www.gov.br/ouvidorias/pt-br/cidadao/lista-de-ouvidorias/estaduais/ouvidoria-geral-do-estado-de-roraima-oge-rr">
           Ouvidoria
         </a>
-        <a className="text-zinc-500 hover:text-zinc-200" href="#">
+        <a className="text-zinc-500 hover:text-zinc-200" target="_blank" href="https://www.transparencia.rr.gov.br/">
           Transparência
         </a>
         {user && (

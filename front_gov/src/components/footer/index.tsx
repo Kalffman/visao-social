@@ -2,10 +2,10 @@ export default function Footer() {
   return (
     <div className="bg-primary">
       <div className="flex p-1 flex-col  h-52 bottom-0 w-full">
-        <div className="relative top-6">
+        <div className="top-10 pt-5 left-8 ">
           <img
-            className="absolute w-36 h-20 max-xl:hidden"
-            src="./assets/icons/brasaoLogo.png"
+            className="absolute  left-9 h-20 max-xl:hidden"
+            src="./assets/icons/brasao-logo-w.png"
             alt="brasão"
           />
         </div>
@@ -13,7 +13,7 @@ export default function Footer() {
           <ul>
             <span>Acesso</span>
             <li className="text-zinc-500 hover:text-zinc-200">
-              <a href="#">Acesso à informação</a>
+              <a href="https://www.transparencia.rr.gov.br">Acesso à informação</a>
             </li>
             <li className="text-zinc-500 hover:text-zinc-200">
               <a href="#">Governo</a>

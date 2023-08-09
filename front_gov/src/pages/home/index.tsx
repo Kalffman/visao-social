@@ -46,7 +46,7 @@ function Home() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="text-base w-full mx-3 text-black focus:outline-none"
-            placeholder="Pesquise por um cpf"
+            placeholder="Digite somente numeros"
           />
           {loading ? (
             <Loading />
