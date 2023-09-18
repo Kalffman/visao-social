@@ -24,7 +24,7 @@ function Home() {
     const regex = /\w{11}/;
 
     if (!regex.test(cpf)) {
-      return alert("coloque um cpf válido");
+      return alert("Digite um cpf válido");
     }
     const data = {
       cpf: cpf,
@@ -46,7 +46,7 @@ function Home() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="text-base w-full mx-3 text-black focus:outline-none"
-            placeholder="Digite somente numeros"
+            placeholder="Pesquise por um cpf"
           />
           {loading ? (
             <Loading />
@@ -67,26 +67,26 @@ function Home() {
             className="bg-white  p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="DADOS PESSOAIS"
           >
-            <div className="mt-6 flex justify-around flex-wrap gap-4">
+            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">NOME</label>
-                <span className="pl-3">{beneficiary.nome}</span>
+                <span className="">{beneficiary.nome}</span>
               </div>
 
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CPF</label>
-                <span className="pl-3">{beneficiary.cpf}</span>
+                <span className="">{beneficiary.cpf}</span>
               </div>
             </div>
             <hr className="mt-4" />
-            <div className="mt-6 flex justify-around flex-wrap gap-4">
+            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">DATA DE NASCIMENTO</label>
-                <span className="pl-3">{beneficiary.data_nascimento}</span>
+                <span className="">{beneficiary.data_nascimento}</span>
               </div>
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">TELEFONE</label>
-                <span className="pl-3">{beneficiary.contatos}</span>
+                <span className="">{beneficiary.contatos}</span>
               </div>
               {/* <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">RG</label>
@@ -95,12 +95,11 @@ function Home() {
             </div>
 
             <Card
-              className={`mt-10 w-full -z-30 overflow-hidden  ease-in-out duration-500 ${
-                isOpenDateils ? "max-h-screen" : "max-h-0"
-              }`}
+              className={`mt-10 w-full -z-30 overflow-hidden  ease-in-out duration-500 ${isOpenDateils ? "max-h-screen" : "max-h-0"
+                }`}
               nameCard="EXTRATO DE USO"
             >
-              <div className="overflow-auto mt-4">
+              <div className="overflow-auto mt-4 p-3">
                 <table className="border-collapse table-auto w-full">
                   <thead className="table-auto text-left">
                     <tr className="border-b border-zinc-950">
@@ -115,9 +114,7 @@ function Home() {
                         return (
                           <tr key={e.cod_id} className="border-b">
                             <td className="border-b p-2">
-                              {new Date(e.data_criacao).toLocaleString("pt", {
-                                dateStyle: "short",
-                              })}
+                              {e.data_liberacao.toString()}
                             </td>
                             <td className="border-b p-2">{e.modalidade}</td>
                             <td className="border-b p-2">{e.status}</td>
@@ -151,14 +148,14 @@ function Home() {
             className="bg-white p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="ENDEREÇO"
           >
-            <div className="mt-6 flex justify-around flex-wrap gap-4">
+            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">BAIRRO</label>
-                <span className="pl-3">{beneficiary.bairro}</span>
+                <span className="">{beneficiary.bairro}</span>
               </div>
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CIDADE</label>
-                <span className="pl-3">{beneficiary.cidade}</span>
+                <span className="">{beneficiary.cidade}</span>
               </div>
               {/* <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CEP</label>
@@ -166,16 +163,16 @@ function Home() {
               </div> */}
             </div>
             <hr className="mt-4" />
-            <div className="mt-6 flex justify-around flex-wrap gap-4">
+            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">N° RESIDENCIAL</label>
-                <span className="pl-3">
+                <span className="">
                   {beneficiary.logradouro.split("Nº")[1]}
                 </span>
               </div>
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">RUA</label>
-                <span className="pl-3">
+                <span className="">
                   {beneficiary.logradouro.split("Nº")[0]}
                 </span>
               </div>
@@ -185,7 +182,7 @@ function Home() {
             className="bg-white p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="COMPOSIÇÃO FAMILIAR"
           >
-            <div className="my-10 w-full flex justify-center">
+            <div className="my-10 w-full flex justify-center p-3">
               {beneficiary.familiar.length > 0 ? (
                 <table className="border-collapse table-auto w-[90%]">
                   <thead className="table-auto text-left">
@@ -201,13 +198,13 @@ function Home() {
                         console.log(parent)
                         return (
                           <tr key={parent.familiar_id} className="border-b">
-                            <td className="border-b p-2">
+                            <td className="border-b py-2">
                               {parent.familiar_nome}
                             </td>
-                            <td className="border-b p-2">
+                            <td className="border-b py-2">
                               {parent.familiar_cpf}
                             </td>
-                            <td className="border-b p-2">
+                            <td className="border-b py-2">
                               {parent.familiar_vinculo}
                             </td>
                           </tr>
@@ -222,8 +219,11 @@ function Home() {
           </Card>
         </main>
       ) : (
-        <main className="flex flex-col  flex-1 items-center gap-6 xl:text-base text-xs p-6 text-black bg-secondary ">
-          <span>Não foi localizado nenhum beneficiário</span>
+        <main className="flex flex-col flex-1 items-center gap-6 xl:text-base text-xs p-6 text-blue-900 bg-secondary">
+          <img src="./assets/icons/buscar.svg" alt="Buscar" width="185" height="185" />
+          <span className="text-blue-900" style={{ fontFamily: 'Arial, sans-serif', fontWeight: 'bold' }}>
+            Realize uma nova pesquisa por um beneficiário...
+          </span>
         </main>
       )}
 

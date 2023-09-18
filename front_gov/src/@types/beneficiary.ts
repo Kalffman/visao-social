@@ -1,7 +1,7 @@
 export interface extractUse {
   id_row: string;
   nome: string;
-  data_criacao: Date;
+  data_liberacao: Date;
   cpf: string;
   cod_id: string;
   nome_mae: string;
