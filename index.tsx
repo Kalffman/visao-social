@@ -149,6 +149,7 @@ function Home() {
             nameCard="ENDEREÇO"
           >
             <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
+<<<<<<< HEAD
 
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CIDADE</label>
@@ -157,6 +158,15 @@ function Home() {
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">BAIRRO</label>
                 <span className="">{beneficiary.bairro}</span>
+=======
+              <div className="flex flex-col max-w-xs w-full">
+                <label className="text-zinc-400">BAIRRO</label>
+                <span className="">{beneficiary.bairro}</span>
+              </div>
+              <div className="flex flex-col max-w-xs w-full">
+                <label className="text-zinc-400">CIDADE</label>
+                <span className="">{beneficiary.cidade}</span>
+>>>>>>> fb3dcebf2070da59be4afa3490d86f51ddd6b0de
               </div>
               {/* <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CEP</label>
@@ -166,6 +176,7 @@ function Home() {
             <hr className="mt-4" />
             <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
+<<<<<<< HEAD
                 <label className="text-zinc-400">RUA</label>
                 <span className="">
                   {beneficiary.logradouro.split("Nº")[0]}
@@ -175,6 +186,17 @@ function Home() {
                 <label className="text-zinc-400">N° RESIDENCIAL</label>
                 <span className="">
                   {beneficiary.logradouro.split("Nº")[1]}
+=======
+                <label className="text-zinc-400">N° RESIDENCIAL</label>
+                <span className="">
+                  {beneficiary.logradouro.split("Nº")[1]}
+                </span>
+              </div>
+              <div className="flex flex-col max-w-xs w-full">
+                <label className="text-zinc-400">RUA</label>
+                <span className="">
+                  {beneficiary.logradouro.split("Nº")[0]}
+>>>>>>> fb3dcebf2070da59be4afa3490d86f51ddd6b0de
                 </span>
               </div>
             </div>
