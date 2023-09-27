@@ -11,13 +11,15 @@ export default function Header() {
 
   return (
     <header className="flex w-full items-center justify-between px-6 bg-[#FDFDFD] h-16 text-zinc-500">
-      <div className="relative bottom-2 left-4 ">
-          <img
-            className="h-20 max-xl:hidden pt-5 "
-            src="./assets/icons/brasao-logo-1x.png"
-            alt="brasão"
-          />
-        </div>
+      <a href="/home">
+  <div className="relative bottom-2 left-4">
+    <img
+      className="h-20 max-xl:hidden pt-5"
+      src="./assets/icons/brasao-logo-1x.png"
+      alt="brasão"
+    />
+  </div>
+</a>
       <button
         className="xl:hidden"
         onClick={() => setIsSideBarOpen(!isSideBarOpen)}

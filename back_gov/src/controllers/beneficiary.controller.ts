@@ -8,7 +8,7 @@ export class Beneficiary {
 
     const query = `SELECT * FROM  vw_beneficiarios WHERE cpf = $1 LIMIT 1;`;
     const queryFamiliar = `SELECT * FROM  vw_pessoas_familiares WHERE pessoa_cpf = $1`;
-    const queryExtractUse = `SELECT * FROM  pbi_beneficiarios WHERE cpf = $1`;
+    const queryExtractUse = `SELECT * FROM  vw_benef_visaosocial WHERE cpf = $1`;
 
     const data: any[] = await prisma.$queryRawUnsafe(query, cpf);
     const dataFamiliar: any[] = await prisma.$queryRawUnsafe(
