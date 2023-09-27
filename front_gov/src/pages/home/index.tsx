@@ -148,15 +148,14 @@ function Home() {
             className="bg-white p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="ENDEREÇO"
           >
-            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
-
-              <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">CIDADE</label>
-                <span className="">{beneficiary.cidade}</span>
-              </div>
+            <div className="mt-6 flex justify-around flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">BAIRRO</label>
-                <span className="">{beneficiary.bairro}</span>
+                <span className="pl-3">{beneficiary.bairro}</span>
+              </div>
+              <div className="flex flex-col max-w-xs w-full">
+                <label className="text-zinc-400">CIDADE</label>
+                <span className="pl-3">{beneficiary.cidade}</span>
               </div>
               {/* <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">CEP</label>
@@ -166,15 +165,15 @@ function Home() {
             <hr className="mt-4" />
             <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">RUA</label>
-                <span className="">
-                  {beneficiary.logradouro.split("Nº")[0]}
+                <label className="text-zinc-400">N° RESIDENCIAL</label>
+                <span className="pl-3">
+                  {beneficiary.logradouro.split("Nº")[1]}
                 </span>
               </div>
               <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">N° RESIDENCIAL</label>
-                <span className="">
-                  {beneficiary.logradouro.split("Nº")[1]}
+                <label className="text-zinc-400">RUA</label>
+                <span className="pl-3">
+                  {beneficiary.logradouro.split("Nº")[0]}
                 </span>
               </div>
             </div>
