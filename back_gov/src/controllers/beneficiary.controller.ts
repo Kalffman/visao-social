@@ -11,6 +11,7 @@ export class Beneficiary {
     const queryExtractUse = `SELECT * FROM  vw_benef_visaosocial WHERE cpf = $1`;
 
     const data: any[] = await prisma.$queryRawUnsafe(query, cpf);
+
     const dataFamiliar: any[] = await prisma.$queryRawUnsafe(
       queryFamiliar,
       cpf
@@ -27,6 +28,7 @@ export class Beneficiary {
     const beneficiary = data["0"];
     beneficiary.id_row = beneficiary.id_row.toString();
 
+
     console.log(dataFamiliar);
     if (dataFamiliar.length > 0) {
       beneficiary.familiar = dataFamiliar.map((e) => {
@@ -40,6 +42,7 @@ export class Beneficiary {
     }
 
     if (dataExtractUse.length > 0) {
+      beneficiary.cep = dataExtractUse[0].cep;
       beneficiary.extractUse = dataExtractUse.map((e) => {
         e.id_row = e.id_row.toString();
 

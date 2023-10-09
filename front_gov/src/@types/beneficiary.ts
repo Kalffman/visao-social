@@ -17,6 +17,7 @@ export interface extractUse {
   bairro: string;
   cidade: string;
   logradouro: string;
+  cep: string;
 }
 
 export interface familiar {
@@ -38,6 +39,7 @@ export interface familiar {
 }
 
 export interface IBeneficiary {
+  cep: string;
   id_row: BigInt;
   nome: string;
   data_criacao: Date;

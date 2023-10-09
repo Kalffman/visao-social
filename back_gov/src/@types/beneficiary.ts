@@ -14,4 +14,5 @@ export interface IBeneficiary {
   bairro: string;
   cidade: string;
   logradouro: string;
+  cep: string
 }
