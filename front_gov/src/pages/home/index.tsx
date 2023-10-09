@@ -37,14 +37,21 @@ function Home() {
     setLoading(false);
   }
 
+  function handleKeyDown(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+        handleSearch(search);
+    }
+}
+
   return (
     <div className="flex flex-col h-full">
       <Header />
       <SubHeader>
         <div className="rounded-lg py-1  bg-white flex xl:w-1/2 max-w-lg justify-center items-center">
-          <input
+        <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown} // Alterado para onKeyDown
             className="text-base w-full mx-3 text-black focus:outline-none"
             placeholder="Pesquise por um cpf"
           />
@@ -67,7 +74,8 @@ function Home() {
             className="bg-white  p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="DADOS PESSOAIS"
           >
-            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
+            <hr className="mt-4" />
+            <div className="mt-4 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">NOME</label>
                 <span className="">{beneficiary.nome}</span>
@@ -78,7 +86,7 @@ function Home() {
                 <span className="">{beneficiary.cpf}</span>
               </div>
             </div>
-            <hr className="mt-4" />
+
             <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
               <div className="flex flex-col max-w-xs w-full">
                 <label className="text-zinc-400">DATA DE NASCIMENTO</label>
@@ -148,33 +156,32 @@ function Home() {
             className="bg-white p-4 w-full max-w-5xl rounded-lg drop-shadow-lg"
             nameCard="ENDEREÇO"
           >
-            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
-              <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">BAIRRO</label>
-                <span className="">{beneficiary.bairro}</span>
-              </div>
-              <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">CIDADE</label>
-                <span className="">{beneficiary.cidade}</span>
-              </div>
-              {/* <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">CEP</label>
-                <span className="pl-3">{}</span>
-              </div> */}
-            </div>
             <hr className="mt-4" />
-            <div className="mt-6 flex justify-between p-3 flex-wrap gap-4">
-              <div className="flex flex-col max-w-xs w-full">
+            <div className="mt-6 flex justify-start p-3 flex-wrap gap-4">
+              <div className="flex flex-col max-w-[260px] w-full">
+                <label className="text-zinc-400">RUA/LOGRADOURO</label>
+                <span className="">
+                  {beneficiary.logradouro.split("Nº")[0]}
+                </span>
+              </div>
+              <div className="flex flex-col max-w-[260px] w-full">
                 <label className="text-zinc-400">N° RESIDENCIAL</label>
                 <span className="">
                   {beneficiary.logradouro.split("Nº")[1]}
                 </span>
               </div>
-              <div className="flex flex-col max-w-xs w-full">
-                <label className="text-zinc-400">RUA</label>
-                <span className="">
-                  {beneficiary.logradouro.split("Nº")[0]}
-                </span>
+              <div className="flex flex-col max-w-[260px] w-full">
+                <label className="text-zinc-400">BAIRRO</label>
+                <span className="">{beneficiary.bairro}</span>
+              </div>
+              <hr className="mt-4" />
+              <div className="flex flex-col max-w-[260px] w-full">
+                <label className="text-zinc-400">CIDADE</label>
+                <span className="">{beneficiary.cidade}</span>
+              </div>
+              <div className="flex flex-col max-w-[260px] w-full">
+                <label className="text-zinc-400">CEP</label>
+                <span className="">{beneficiary.cep}</span>
               </div>
             </div>
           </Card>
