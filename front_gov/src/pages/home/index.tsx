@@ -28,6 +28,7 @@ function Home() {
     }
     const data = {
       cpf: cpf,
+      
     };
     setLoading(true);
     await api
